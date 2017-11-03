@@ -46,5 +46,5 @@ data "ibm_container_cluster" "cluster_foo" {
 # Outputs
 ##############################################################################
 output "cluster_id" {
-  value = "${ibm_container_cluster.cluster_foo.id}"
+  value = "${data.ibm_container_cluster.cluster_foo.id}"
 }
