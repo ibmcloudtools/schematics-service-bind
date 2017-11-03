@@ -46,6 +46,16 @@ resource "ibm_service_instance" "cloudant" {
   plan       = "Lite"
 }
 
+resource "ibm_container_bind_service" "cloudant_binding" {
+  cluster_name_id             = "${data.ibm_container_cluster.playground.id}"
+  service_instance_space_guid = "693c2fed-20b9-4ae3-aef8-f425759b77b8"
+  service_instance_name_id    = "${ibm_service_instance.cloudant.id}"
+  namespace_id                = "default"
+  org_guid                    = "25a313d0-2842-479d-9597-9cca129222d2"
+  space_guid                  = "693c2fed-20b9-4ae3-aef8-f425759b77b8"
+  account_guid                = "2de836702ef00a3435bab2a105c5452b"
+}
+
 ##############################################################################
 # Outputs
 ##############################################################################
