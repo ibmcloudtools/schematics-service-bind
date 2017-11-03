@@ -17,6 +17,22 @@ variable slusername {
 variable slapikey {
   description = "Your Bluemix Infrastructure (SoftLayer) API key."
 }
+variable accountid {
+  description = "IBM Cloud Account ID"
+}
+variable orgid {
+  description = "IBM Cloud CloudFundry Organization ID"
+}
+variable spaceid {
+  description = "IBM Cloud CloudFoundry Space ID"
+}
+variable clusterid {
+  description = "IBM Cloud Container Service Cluster ID"
+}
+variable clusternamespace{
+  description = "IBM Cloud Container Service Cluster namespace to bind the service instances to"
+  default = "default"
+}
 
 ##############################################################################
 # IBM Cloud Provider
@@ -28,37 +44,22 @@ provider "ibm" {
 }
 
 ##############################################################################
-# Data Sources
-##############################################################################
-data "ibm_container_cluster" "playground" {
-  cluster_name_id = "devex-playground"
-  org_guid        = "25a313d0-2842-479d-9597-9cca129222d2"
-  space_guid      = "693c2fed-20b9-4ae3-aef8-f425759b77b8"
-  account_guid    = "2de836702ef00a3435bab2a105c5452b"
-}
-##############################################################################
 # Resources
 ##############################################################################
 resource "ibm_service_instance" "cloudant" {
   name       = "cloudant-created-with-schematics"
-  space_guid = "693c2fed-20b9-4ae3-aef8-f425759b77b8"
+  space_guid = "${var.spaceid}"
   service    = "cloudantNoSQLDB"
   plan       = "Lite"
 }
 
 resource "ibm_container_bind_service" "cloudant_binding" {
-  cluster_name_id             = "${data.ibm_container_cluster.playground.id}"
-  service_instance_space_guid = "693c2fed-20b9-4ae3-aef8-f425759b77b8"
+  cluster_name_id             = "${var.clusterid}"
+  service_instance_space_guid = "${var.spaceid}"
   service_instance_name_id    = "${ibm_service_instance.cloudant.id}"
-  namespace_id                = "default"
-  org_guid                    = "25a313d0-2842-479d-9597-9cca129222d2"
-  space_guid                  = "693c2fed-20b9-4ae3-aef8-f425759b77b8"
-  account_guid                = "2de836702ef00a3435bab2a105c5452b"
+  namespace_id                = "${var.clusternamespace}"
+  account_guid                = "${var.accountid}"
+  org_guid                    = "${var.orgid}"
+  space_guid                  = "${var.spaceid}"
 }
 
-##############################################################################
-# Outputs
-##############################################################################
-output "cluster_id" {
-  value = "${data.ibm_container_cluster.playground.id}"
-}
