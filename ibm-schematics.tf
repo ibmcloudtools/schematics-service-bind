@@ -29,7 +29,7 @@ variable spaceid {
 variable clusterid {
   description = "IBM Cloud Container Service Cluster ID"
 }
-variable clusternamespace{
+variable clusternamespace {
   description = "IBM Cloud Container Service Cluster namespace to bind the service instances to"
   default = "default"
 }
