@@ -30,7 +30,7 @@ provider "ibm" {
 ##############################################################################
 # Data Sources
 ##############################################################################
-data "ibm_container_cluster" "cluster_foo" {
+data "ibm_container_cluster" "playground" {
   cluster_name_id = "devex-playground"
   org_guid        = "25a313d0-2842-479d-9597-9cca129222d2"
   space_guid      = "693c2fed-20b9-4ae3-aef8-f425759b77b8"
@@ -39,12 +39,16 @@ data "ibm_container_cluster" "cluster_foo" {
 ##############################################################################
 # Resources
 ##############################################################################
-
-
+resource "ibm_service_instance" "cloudant" {
+  name       = "cloudant-created-with-schematics"
+  space_guid = "693c2fed-20b9-4ae3-aef8-f425759b77b8"
+  service    = "cloudantNoSQLDB"
+  plan       = "Lite"
+}
 
 ##############################################################################
 # Outputs
 ##############################################################################
 output "cluster_id" {
-  value = "${data.ibm_container_cluster.cluster_foo.id}"
+  value = "${data.ibm_container_cluster.playground.id}"
 }
